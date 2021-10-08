@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.operating-system }}
     strategy:
       matrix:
-        operating-system: [windows-latest,ubuntu-latest,macos-latest]
+        operating-system: [windows-latest,ubuntu-latest]
         lazarus-versions: [stable]
     steps:
     - uses: actions/checkout@v2
@@ -17,7 +17,6 @@ jobs:
       uses: gcarreno/setup-lazarus@v3.0.2
       with:
         lazarus-version: ${{ matrix.lazarus-versions }}
-        include-packages: "Synapse 40.1"
     - name: Build the Main Application
       if: ${{ matrix.operating-system != 'macos-latest' }}
       run: lazbuild -B "source/project/tracker_editor/trackereditor.lpi"
@@ -27,4 +26,5 @@ jobs:
     - name: Build the Unit Tests Application
       run: lazbuild -B "source/project/unit_test/tracker_editor_test.lpi"
     - name: Run the Unit Tests Application
+      shell: bash
       run: source ./scripts/travis_unit_test.sh

@@ -3,7 +3,7 @@
 # Run unit test in Windows, Linux and macOS
 
 #----------- check for Windows, Linux and macOS build
-if [ "$TRAVIS_OS_NAME" = "linux" ]
+if [ "$RUNNER_OS" = "Linux" ]
 then
   # show Linux OS version
   uname -a
@@ -16,7 +16,7 @@ then
   xvfb-run enduser/test_trackereditor -a --format=plain
   set +e
 
-elif [ "$TRAVIS_OS_NAME" = "osx" ]
+elif [ "$RUNNER_OS" = "macOS" ]
 then
   # show macOS version
   sw_vers
@@ -29,7 +29,7 @@ then
   enduser/test_trackereditor -a --format=plain
   set +e
 
-elif [ "$TRAVIS_OS_NAME" = "windows" ]
+elif [ "$RUNNER_OS" = "Windows" ]
 then
   # Exit immediately if a command exits with a non-zero status.
   set -e
