@@ -1,0 +1,30 @@
+name: build
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  build:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [windows-latest,ubuntu-latest,macos-latest]
+        lazarus-versions: [stable]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Lazarus
+      uses: gcarreno/setup-lazarus@v3.0.2
+      with:
+        lazarus-version: ${{ matrix.lazarus-versions }}
+        include-packages: "Synapse 40.1"
+    - name: Build the Main Application
+      if: ${{ matrix.operating-system != 'macos-latest' }}
+      run: lazbuild -B "source/project/tracker_editor/trackereditor.lpi"
+    - name: Build the Main Application (macOS)
+      if: ${{ matrix.operating-system == 'macos-latest' }}
+      run: lazbuild -B --ws=cocoa "source/project/tracker_editor/trackereditor.lpi"
+    - name: Build the Unit Tests Application
+      run: lazbuild -B "source/project/unit_test/tracker_editor_test.lpi"
+    - name: Run the Unit Tests Application
+      run: source ./scripts/travis_unit_test.sh
